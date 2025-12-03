@@ -57,30 +57,37 @@ class AccountScreen {
   }
 
   _getAllAccounts() async {
-    try { 
-    List<Account> listAccounts = await _accountService.getAll();
-    print(listAccounts);
+    try {
+      List<Account> listAccounts = await _accountService.getAll();
+      print(listAccounts);
     } on ClientException catch (clientException) {
       print("Não foi possível alcançar o servidor.");
-      print("ente novamente mais tarde.");
+      print("Tente novamente mais tarde.");
       print(clientException.message);
       print(clientException.uri);
     } on Exception {
-      print("Ocorreu um erro ao buscar suas contas.");
-      print("ente novamente mais tarde.");
+      print("Não consegui recuperar os dados da conta.");
+      print("Tente novamente mais tarde.");
     } finally {
       print("${DateTime.now()} | Ocorreu uma tentativa de consulta.");
+      // Aqui vai rodar antes de fechar.
     }
+    // Aqui não vai rodar antes de fechar.
   }
 
   _addExampleAccount() async {
-    Account example = Account(
-      id: "ID555",
-      name: "Haley",
-      lastName: "Chirívia",
-      balance: 8001,
-    );
+    try {
+      Account example = Account(
+        id: "ID555",
+        name: "Haley",
+        lastName: "Chirívia",
+        balance: 8001,
+        accountType: "Brigadeiro",
+      );
 
-    await _accountService.addAccount(example);
+      await _accountService.addAccount(example);
+    } on Exception {
+      print("Ocorreu um problema ao tentar adicionar.");
+    }
   }
 }
